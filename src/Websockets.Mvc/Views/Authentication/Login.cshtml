@@ -1,0 +1,75 @@
+﻿@model Websockets.Mvc.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <section class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h1 class="fw-bold"><i class="bi bi-box-arrow-in-right me-2"></i> Welcome Back!</h1>
+                    <p>Log in to start chatting in real-time with other users.</p>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <h2 class="text-center">Use your account to log in</h2>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" asp-for="RememberMe" />
+                            <label asp-for="RememberMe" class="form-check-label">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">
+                            <i class="bi bi-door-open me-2"></i> Log in
+                        </button>
+
+                        <div class="mt-4 text-center">
+                            <p>
+                                <a id="forgot-password" class="text-decoration-none">Forgot your password?</a>
+                            </p>
+                            <p>
+                                <a asp-controller="authentication" asp-action="Register" class="text-decoration-none">Register as a new user</a>
+                            </p>
+                            <p>
+                                <a id="resend-confirmation" class="text-decoration-none">Resend email confirmation</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

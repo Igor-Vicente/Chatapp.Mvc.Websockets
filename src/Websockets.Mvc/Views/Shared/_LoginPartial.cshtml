@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white d-flex align-items-center" title="Manage">
+                @User.Identity?.Name 👥 
+            </a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-controller="Authentication" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-danger text-white d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
+                        <path d="M8.146 3.146a.5.5 0 0 0-.708.708L9.793 6H2.5a.5.5 0 0 0 0 1h7.293L7.439 9.146a.5.5 0 1 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5z" />
+                        <path d="M8.5 1a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5h-7z" />
+                    </svg>
+                    Logout
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="Authentication" asp-action="Register">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-plus me-2" viewBox="0 0 16 16">
+                    <path d="M8 9a.5.5 0 0 1 .5-.5H10V6a.5.5 0 0 1 1 0v2.5h1.5a.5.5 0 0 1 0 1H11V12a.5.5 0 0 1-1 0v-2.5H8.5a.5.5 0 0 1-.5-.5z" />
+                    <path d="M4 3a2 2 0 1 1 4 0A2 2 0 0 1 4 3zM6 6c-.326 0-.645.074-.93.207a3.964 3.964 0 0 0-1.516-.324C2.902 5.883 2 7.05 2 8.5c0 2.348 1.902 3.617 2.565 4.324a3.964 3.964 0 0 0 1.516-.324c.285.133.604.207.93.207h4c.326 0 .645-.074.93-.207a3.964 3.964 0 0 0 1.516.324C13.098 12.117 14 10.95 14 9.5c0-2.348-1.902-3.617-2.565-4.324a3.964 3.964 0 0 0-1.516.324c-.285-.133-.604-.207-.93-.207H6z" />
+                </svg>
+                Register
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="Authentication" asp-action="Login">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-in-right me-2" viewBox="0 0 16 16">
+                    <path d="M8.146 8.854a.5.5 0 0 0 .708-.708L6.707 6h7.293a.5.5 0 0 0 0-1H6.707l2.147-2.146a.5.5 0 0 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5z" />
+                    <path d="M8.5 1a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5h-7z" />
+                </svg>
+                Login
+            </a>
+        </li>
+    }
+</ul>

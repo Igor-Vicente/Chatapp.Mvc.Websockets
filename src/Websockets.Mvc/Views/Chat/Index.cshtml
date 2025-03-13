@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model Websockets.Mvc.ViewModels.ChatViewModel
+
+<div class="container py-5">
+    <h1 class="text-center mb-4">Real-Time Chat</h1>
+    <div class="card">
+        <div class="card-header bg-primary text-white fw-bold">
+            Chat Room @Model.Id
+        </div>
+        <div class="card-body" id="chatBox" style="height: 400px; overflow-y: auto;">
+            @foreach (var message in Model.Messages)
+            {
+                <div class="alert alert-secondary">
+                    <strong>@message.Sender</strong>: @message.Content <br />
+                    <small> @message.Timestamp.ToString("dd-MM-yy h:mm:ss tt").Replace("-", "/")</small> 
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+            <div class="input-group">
+                <textarea type="text" id="messageInput" class="form-control" placeholder="Type a message..."> </textarea>
+                <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const domain = window.location.host;
+    const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const socket = new WebSocket(`${protocol}${domain}/Chat/websocket?chat=@Model.Id&sender=@Model.Sender`);
+
+    socket.onmessage = function (event) {
+        const chatBox = document.getElementById("chatBox");
+        const message = JSON.parse(event.data);
+        console.log(message);
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "alert alert-secondary";
+        msgDiv.innerHTML = `<strong>${message.Sender}</strong>: ${message.Content} <br />
+                            <small>${new Date(message.Timestamp).toLocaleString()}</small>`;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    socket.onclose = function (event) {
+        console.log("Connection closed:", event);
+        if(event.code == 1011) window.alert("Something went wrong! \n Please, try to reload the page.")
+    };
+
+    window.addEventListener("beforeunload", () => {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.close(1000, "Client closed connection");
+        }
+    });
+
+     function sendMessage() {
+        const input = document.getElementById("messageInput");
+        if (input.value.trim() !== "") {
+            socket.send(input.value);
+            input.value = "";
+        }
+    }
+</script>

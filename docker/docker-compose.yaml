@@ -1,0 +1,61 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      MSSQL_SA_PASSWORD: "Sqlserver@2025"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    networks:
+      - mongo-network
+
+  mvc-app: 
+    container_name: mvc-chatapp
+    build:
+      context: ../src/Websockets.Mvc
+      dockerfile: ./Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:90
+      - ConnectionStrings__mongodb=mongodb://mongo:27017/chatapp
+      - ConnectionStrings__sqlserver=Server=sqlserver,1433;Database=chatapp;User ID=sa;Password=Sqlserver@2025;TrustServerCertificate=True;
+    ports:
+      - "8082:90"
+    depends_on:
+      - sqlserver
+    networks:
+      - mongo-network
+
+  mongo:
+    image: mongo
+    restart: always
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-volume:/data/db
+    networks:
+      - mongo-network
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      # ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      # ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      #ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    networks:
+      - mongo-network
+
+volumes:
+  mongo-volume:
+
+networks:
+  mongo-network:
+    driver: bridge

@@ -1,0 +1,37 @@
+﻿@using Websockets.Mvc.Extensions
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+
+<div class="container py-5">
+    <h1 class="text-center mb-5">Available Users</h1>
+    <div class="row g-4 mb-5">
+        @foreach (var i in Model)
+        {
+            <div class="col-lg-4 col-md-6">
+                <div class="card shadow-lg border-0">
+                    <img class="card-img-top" src="https://s.gravatar.com/avatar/@this.HashEmailForGravatar(i.UserName)?d=mm&s=100" alt="User Avatar">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@i.UserName</h5>
+                        <p class="card-text">Ready to chat? Click the button below to start a real-time conversation with me!</p>
+                        <a asp-controller="chat" asp-action="index" asp-route-receiver="@i.Id" class="btn btn-primary w-100">
+                            <i class="bi bi-chat-dots me-2"></i>Chat with me
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card img {
+        object-fit: cover;
+        height: 150px;
+        border-bottom: 2px solid #007bff;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        console.log("User list loaded. Ready to start chatting!");
+    </script>
+}

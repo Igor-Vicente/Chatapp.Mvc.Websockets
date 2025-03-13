@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container py-5">
+    <div class="text-center">
+        <h1 class="display-4 fw-bold">Welcome to the Chat Application</h1>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-chat-dots mt-4 text-primary" viewBox="0 0 16 16">
+            <path d="M3 0a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h9.586l3.707 3.707A1 1 0 0 0 16 15V3a3 3 0 0 0-3-3H3zm11 12-2.5-2.5H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v9z" />
+            <path d="M7 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+        </svg>
+
+        <p class="mt-4 fs-5">
+            This application is for testing purposes only, so you will not receive notifications when new messages arrive.
+            To check for new messages, you need to open the chat. Once the chat is open, a real-time WebSocket connection will be established.
+        </p>
+
+        <div class="mt-4 p-4 border rounded shadow bg-light">
+            <h2 class="h4 text-primary">What is a WebSocket?</h2>
+            <p>
+                WebSockets provide a full-duplex communication channel over a single, long-lived connection between the client and server.
+                Unlike traditional HTTP requests, which require a new connection for each interaction, WebSockets allow for continuous, real-time data exchange.
+            </p>
+
+            <h3 class="h5 text-success">How It Works in This App</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">When you open a chat, a WebSocket connection is established.</li>
+                <li class="list-group-item">Messages are instantly sent and received without page reloads.</li>
+                <li class="list-group-item">If both users are connected, they can chat in real time, experiencing immediate message delivery.</li>
+            </ul>
+        </div>
+        <div class="btn btn-primary my-5">
+            <a class="nav-link text-white fw-bold" asp-controller="Authentication" asp-action="Users"> 💬 Start</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    
+</style>

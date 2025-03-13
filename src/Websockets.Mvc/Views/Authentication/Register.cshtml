@@ -1,0 +1,51 @@
+﻿@model Websockets.Mvc.ViewModels.RegisterViewModel
+
+<div class="container py-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="fw-bold">Create Your Account</h2>
+                <p>Register to start chatting with other users in real time!</p>
+            </div>
+            <div class="card-body">
+                <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Email">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                        <label asp-for="Password">Password</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                        <label asp-for="ConfirmPassword">Confirm Password</label>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<!-- Add an SVG icon for decoration -->
+<div class="text-center mt-5">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-chat-dots mt-4 text-primary" viewBox="0 0 16 16">
+        <path d="M3 0a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h9.586l3.707 3.707A1 1 0 0 0 16 15V3a3 3 0 0 0-3-3H3zm11 12-2.5-2.5H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v9z" />
+        <path d="M7 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+    </svg>
+    <p class="mt-3 fs-5">Connect with other registered users and start chatting in real time!</p>
+</div>
+
