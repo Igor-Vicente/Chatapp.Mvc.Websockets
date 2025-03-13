@@ -21,6 +21,8 @@ This application is fully containerized using Docker Compose. If you have Docker
 docker compose up -d
 ```
 
+Then you can user your browser to navigate to: http://localhost:8082/
+
 ## Refs
 
 - https://learn.microsoft.com/en-us/aspnet/core/fundamentals/websockets?view=aspnetcore-9.0
