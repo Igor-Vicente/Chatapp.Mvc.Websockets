@@ -1,6 +1,6 @@
 # WebSockets + MVC Chat App
 
-This project is a simple web application designed to explore and understand how WebSockets work in an MVC environment. The goal is to demonstrate the implementation of WebSockets using a minimal approach, with a custom connection manager class.
+This project is a simple web application designed to explore and understand how WebSockets work. The goal is to demonstrate the implementation of WebSockets using a minimal approach, with a custom connection manager class.
 
 In this application, WebSockets are implemented using `app.UseWebSockets(webSocketOptions)`. The connection manager is a custom class that leverages Dependency Injection (DI) in singleton scope to manage WebSocket connections. The application tracks active connections in memory, ensuring that messages are routed correctly to the intended recipients.
 
@@ -10,7 +10,7 @@ WebSocket is a communication protocol that provides full-duplex communication ch
 
 ## Application Screenshot
 
-![Chat App Screenshot](link-to-image)  
+![Chat App Screenshot](https://raw.githubusercontent.com/Igor-Vicente/Chatapp.Mvc.Websockets/refs/heads/main/img/chat-example.png)  
 _Image of the application (2 chats)_
 
 ## How to Test
