@@ -17,9 +17,7 @@ namespace Websockets.Mvc
             var builder = WebApplication.CreateBuilder(args);
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
             builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration.GetConnectionString("sqlserver"));
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Authentication/Login";
@@ -29,6 +27,8 @@ namespace Websockets.Mvc
             builder.Services.AddSingleton<MongoTableFactory>();
             builder.Services.AddSingleton<IChatConnectionManager, ChatConnectionManager>();
             builder.Services.AddScoped<IChatRepository, ChatRepository>();
+            builder.Services.AddScoped<IUserInjection, UserInjection>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             var app = builder.Build();
 

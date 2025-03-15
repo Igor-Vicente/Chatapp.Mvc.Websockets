@@ -5,6 +5,7 @@ namespace Websockets.Mvc.Factories
     public class MongoTableFactory
     {
         public const string CHAT_COLLECTION = "chat";
+        public const string USER_COLLECTION = "user";
 
 
         private readonly string _connectionString;

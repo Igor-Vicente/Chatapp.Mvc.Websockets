@@ -9,5 +9,6 @@ namespace Websockets.Mvc.ViewModels
         public IEnumerable<Message> Messages { get; set; }
         public DateTime Timestamp { get; set; }
         public string Sender { get; set; }
+        public string Receiver { get; set; }
     }
 }

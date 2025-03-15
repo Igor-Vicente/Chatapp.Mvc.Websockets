@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
 using System.Text;
@@ -16,37 +15,48 @@ namespace Websockets.Mvc.Controllers
     public class ChatController : Controller
     {
         private readonly IChatRepository _chatRepository;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IUserInjection _userInjection;
         private readonly IChatConnectionManager _chatConnections;
         private readonly ILogger<ChatController> _logger;
+        private readonly IUserRepository _userRepository;
 
         public ChatController(IChatRepository chatRepository,
-                              UserManager<IdentityUser> userManager,
+                              IUserInjection userInjection,
                               IChatConnectionManager chatConnections,
-                              ILogger<ChatController> logger)
+                              ILogger<ChatController> logger,
+                              IUserRepository userRepository)
         {
             _chatRepository = chatRepository;
-            _userManager = userManager;
+            _userInjection = userInjection;
             _chatConnections = chatConnections;
             _logger = logger;
+            _userRepository = userRepository;
         }
 
-        public async Task<IActionResult> Index(Guid receiver)
+        public async Task<IActionResult> Index(Guid receiverId)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var sender = Guid.Parse(user.Id);
+            var user = _userInjection.GetUserId();
+            var sender = await _userRepository.GetUser(user);
+            var receiver = await _userRepository.GetUser(receiverId);
 
-            var chat = await _chatRepository.GetChat(sender, receiver);
+            var chat = await _chatRepository.GetChatAsync(sender.Id, receiver.Id);
 
             if (chat == null)
             {
                 chat = new Chat([sender, receiver]);
-                await _chatRepository.Create(chat);
+                await _chatRepository.CreateAsync(chat);
             }
 
-            var model = chat.ToChatViewModel(user.Email);
+            var model = chat.ToChatViewModel(sender.Name, receiver.Name);
 
             return View(model);
+        }
+
+        [HttpGet("available-users")]
+        public async Task<IActionResult> AvailableUsers()
+        {
+            var users = await _userRepository.GetUsers();
+            return View(users);
         }
 
         [Route("websocket")]
@@ -100,7 +110,7 @@ namespace Websockets.Mvc.Controllers
         private async Task SaveMessageDb(Guid chat, string sender, string message)
         {
             var messageDb = new Message(sender, message);
-            await _chatRepository.AddMessageToChat(chat, messageDb);
+            await _chatRepository.AddMessageToChatAsync(chat, messageDb);
         }
 
         private async Task BroadcastMessage(Guid chat, string sender, string message)

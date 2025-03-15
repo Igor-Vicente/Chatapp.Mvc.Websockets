@@ -2,11 +2,11 @@
 {
     public class Chat : Entity
     {
-        public Guid[] Users { get; set; }
+        public User[] Users { get; set; }
         public IEnumerable<Message> Messages { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public Chat(Guid[] users)
+        public Chat(User[] users)
         {
             Users = users;
             Messages = [];

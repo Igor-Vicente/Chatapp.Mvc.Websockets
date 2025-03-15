@@ -1,6 +1,6 @@
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server
     environment:
       MSSQL_SA_PASSWORD: "Sqlserver@2025"
       ACCEPT_EULA: "Y"

@@ -21,3 +21,10 @@ body {
   margin-bottom: 60px;
   background: linear-gradient(135deg, #f9f9f9, #e3f2fd);
 }
+
+#bg-img {
+/*    background-repeat: no-repeat;
+    background-position: center;*/
+    background-image: url("/img/flower.jpg");
+    /*background-size: auto;*/
+}

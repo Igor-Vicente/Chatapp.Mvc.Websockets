@@ -5,7 +5,7 @@ namespace Websockets.Mvc.Extensions
 {
     public static class ModelConverter
     {
-        public static ChatViewModel ToChatViewModel(this Chat chat, string sender = null)
+        public static ChatViewModel ToChatViewModel(this Chat chat, string sender, string receiver)
         {
             return new ChatViewModel()
             {
@@ -13,6 +13,7 @@ namespace Websockets.Mvc.Extensions
                 Messages = chat.Messages,
                 Timestamp = chat.Timestamp,
                 Sender = sender,
+                Receiver = receiver
             };
         }
     }
