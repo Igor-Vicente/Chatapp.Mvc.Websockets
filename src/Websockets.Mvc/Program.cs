@@ -26,6 +26,7 @@ namespace Websockets.Mvc
             builder.Services.AddControllersWithViews();
             builder.Services.AddSingleton<MongoTableFactory>();
             builder.Services.AddSingleton<IChatConnectionManager, ChatConnectionManager>();
+            builder.Services.AddSingleton<INotifierConnectionManager, NotifierConnectionManager>();
             builder.Services.AddScoped<IChatRepository, ChatRepository>();
             builder.Services.AddScoped<IUserInjection, UserInjection>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();

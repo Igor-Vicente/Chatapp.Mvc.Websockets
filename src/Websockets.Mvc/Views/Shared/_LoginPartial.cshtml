@@ -1,18 +1,16 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+﻿@inject Websockets.Mvc.Configuration.IUserInjection UserInjection;
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (UserInjection.IsAuthenticated())
     {
         <li class="nav-item">
             <a class="nav-link text-white d-flex align-items-center" title="Manage">
-                @User.Identity?.Name 🔒
+                @UserInjection.GetUserEmail()
             </a>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-controller="Authentication" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-primary text-white d-flex align-items-center border">
+                <button type="submit" class="nav-link btn btn-primary text-white d-flex align-items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
                         <path d="M8.146 3.146a.5.5 0 0 0-.708.708L9.793 6H2.5a.5.5 0 0 0 0 1h7.293L7.439 9.146a.5.5 0 1 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5z" />
                         <path d="M8.5 1a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5h-7z" />
