@@ -28,7 +28,7 @@
 <script>
     const domain = window.location.host;
     const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-    const socket = new WebSocket(`${protocol}${domain}/Chat/websocket?chat=@Model.Id&sender=@Model.Sender`);
+    const socket = new WebSocket(`${protocol}${domain}/chathub/chatting?chatId=@Model.Id&senderId=@Model.SenderId`);
 
     socket.onmessage = function (event) {
         const chatBox = document.getElementById("chatBox");

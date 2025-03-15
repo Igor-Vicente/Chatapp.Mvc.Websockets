@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<Chat>
 
+<div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3 m-1" style="z-index: 11">
+    <div id="toast-container"></div>
+</div>
 <div class="card">
     <div class="card-header bg-primary text-white">
         <h5>Active Conversations</h5>
@@ -7,14 +10,15 @@
     <div class="card-body container" style="max-height: 300px; overflow-y: auto;">
         @if (Model != null && Model.Any())
         {
-            <ul class="row justify-content-around align-items-center">
+            <ul class="row justify-content-around align-items-center" id="chat-list">
                 @foreach (var chat in Model)
                 {
                     var lastMessage = chat.Messages.LastOrDefault();
-                    <li class="m-1 list-group-item border col-md-3">
-                        <a asp-controller="chat" asp-action="index" asp-route-receiverId="@chat.Users[0].Id" class="text-decoration-none d-flex justify-content-between">
+                    <li class="m-1 list-group-item border col-md-3" data-chat-id="@chat.Id">
+                        <a asp-controller="chat" asp-action="index" asp-route-receiverId="@chat.Users[0].Id"
+                           class="text-decoration-none d-flex justify-content-between">
                             <div class="w-50" style="max-height: 50px; overflow: hidden;">
-                                <h6 class="mb-1">@chat.Users[0].Name</h6>
+                                <h6 class="mb-1" style="max-height: 20px; overflow: hidden;">@chat.Users[0].Name</h6>
                                 <p class="mb-1 text-muted">
                                     @(lastMessage != null ? lastMessage.Content : "No messages yet")
                                 </p>
@@ -27,7 +31,89 @@
         }
         else
         {
-            <p class="text-muted">No active conversations</p>
+             <ul class="row justify-content-around align-items-center" id="chat-list">
+                <li id="no-active-chat" class="m-1 list-group-item col-md-3">
+                    No active conversations
+                 </li>
+             </ul>
         }
     </div>
 </div>
+
+<script>
+    const domain = window.location.host;
+    const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const socket = new WebSocket(`${protocol}${domain}/chathub/notify`);
+
+    socket.onmessage = function (event) {
+        try {
+            const data = JSON.parse(event.data);
+            console.log(data);
+            showToast(data.SenderName, data.Message);
+            const chatList = document.getElementById("chat-list");
+            let chatItem = chatList.querySelector(`[data-chat-id="${data.ChatId}"]`);
+
+            if (!chatItem) {
+                chatItem = document.createElement("li");
+                chatItem.className = "m-1 list-group-item border col-md-3";
+                chatItem.setAttribute("data-chat-id", data.ChatId);
+                chatItem.innerHTML = `
+                    <a href="/chat/index?receiverId=${data.SenderId}" class="text-decoration-none d-flex justify-content-between">
+                        <div class="w-50" style="max-height: 50px; overflow: hidden;">
+                            <h6 class="mb-1" style="max-height: 20px; overflow: hidden;">${data.SenderName}</h6>
+                            <p class="mb-1 text-muted">${data.Message}</p>
+                        </div>
+                        <small class="text-muted">${new Date(data.Timestamp).toLocaleString()}</small>
+                    </a>
+                `;
+                chatList.prepend(chatItem);
+                document.getElementById("no-active-chat").remove();
+            } else {
+                const messageElement = chatItem.querySelector("p");              
+                if (messageElement) {
+                    messageElement.textContent = data.Message;
+                }
+                chatList.prepend(chatItem);
+            }
+        } catch (error) {
+            console.error("Erro ao processar a mensagem WebSocket:", error);
+        }
+    };
+
+    socket.onclose = function (event) {
+        console.log("Conexão fechada:", event);
+        if (event.code == 1011) {
+            alert("Algo deu errado! \n Por favor, tente recarregar a página.");
+        }
+    };
+
+    window.addEventListener("beforeunload", () => {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.close(1000, "Cliente fechou a conexão");
+        }
+    });
+
+
+    function showToast(title, message) {
+        const toastContainer = document.getElementById("toast-container");
+
+        const toastHTML = `
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" class="p-4">
+                <div class="toast-header">
+                    <strong class="me-auto fw-bold">${title}</strong>
+                    <small>Agora</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">${message}</div>
+            </div>
+        `;
+
+        const toastElement = document.createElement("div");
+        toastElement.innerHTML = toastHTML;
+        toastContainer.appendChild(toastElement);
+
+        setTimeout(() => {
+            toastElement.remove();
+        }, 10000);
+    }
+</script>
