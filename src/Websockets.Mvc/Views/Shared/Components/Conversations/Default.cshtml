@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Chat>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5>Active Conversations</h5>
+    </div>
+    <div class="card-body container" style="max-height: 300px; overflow-y: auto;">
+        @if (Model != null && Model.Any())
+        {
+            <ul class="row justify-content-around align-items-center">
+                @foreach (var chat in Model)
+                {
+                    var lastMessage = chat.Messages.LastOrDefault();
+                    <li class="m-1 list-group-item border col-md-3">
+                        <a asp-controller="chat" asp-action="index" asp-route-receiverId="@chat.Users[0].Id" class="text-decoration-none d-flex justify-content-between">
+                            <div class="w-50" style="max-height: 50px; overflow: hidden;">
+                                <h6 class="mb-1">@chat.Users[0].Name</h6>
+                                <p class="mb-1 text-muted">
+                                    @(lastMessage != null ? lastMessage.Content : "No messages yet")
+                                </p>
+                            </div>
+                            <small class="text-muted">@chat.Timestamp.ToShortDateString()</small>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">No active conversations</p>
+        }
+    </div>
+</div>

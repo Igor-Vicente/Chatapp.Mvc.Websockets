@@ -6,9 +6,9 @@
 
         //public ValidationResult ValidationResult { get; protected set; }
 
-        public Entity()
+        public Entity(Guid? id = null)
         {
-            Id = Guid.NewGuid();
+            Id = id ?? Guid.NewGuid();
         }
     }
 }

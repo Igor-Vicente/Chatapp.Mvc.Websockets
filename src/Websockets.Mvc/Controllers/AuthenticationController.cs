@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Websockets.Mvc.Models;
+using Websockets.Mvc.Repository;
 using Websockets.Mvc.ViewModels;
 
 namespace Websockets.Mvc.Controllers
@@ -9,11 +10,15 @@ namespace Websockets.Mvc.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public AuthenticationController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AuthenticationController(SignInManager<IdentityUser> signInManager,
+                                        UserManager<IdentityUser> userManager,
+                                        IUserRepository userRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _userRepository = userRepository;
         }
 
 
@@ -42,7 +47,7 @@ namespace Websockets.Mvc.Controllers
                 }
                 return View(model);
             }
-
+            await _userRepository.AddUserAsync(new User(Guid.Parse(user.Id), model.Name, model.Email));
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             return LocalRedirect(returnUrl);
@@ -85,16 +90,6 @@ namespace Websockets.Mvc.Controllers
             await _signInManager.SignOutAsync();
             if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
             return LocalRedirect(returnUrl);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Users()
-        {
-            if (!_signInManager.IsSignedIn(User)) return RedirectToAction("Login", "Authentication", new { ReturnUrl = Request.Path });
-
-            var users = await _userManager.Users.ToListAsync();
-
-            return View(users);
         }
     }
 }
