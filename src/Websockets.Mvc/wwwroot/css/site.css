@@ -23,8 +23,8 @@ body {
 }
 
 #bg-img {
-/*    background-repeat: no-repeat;
-    background-position: center;*/
-    background-image: url("/img/flower.jpg");
-    /*background-size: auto;*/
+/*    background-repeat: repeat;*/
+    /*background-position: center;*/
+    background-image: url("/img/bugs.jpg");
+/*    background-size: contain;*/
 }

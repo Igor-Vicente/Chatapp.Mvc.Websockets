@@ -58,7 +58,7 @@
                 chatItem.className = "m-1 list-group-item border col-md-3";
                 chatItem.setAttribute("data-chat-id", data.ChatId);
                 chatItem.innerHTML = `
-                    <a href="/chat/index?receiverId=${data.SenderId}" class="text-decoration-none d-flex justify-content-between">
+                    <a href="/chat?receiverId=${data.SenderId}" class="text-decoration-none d-flex justify-content-between">
                         <div class="w-50" style="max-height: 50px; overflow: hidden;">
                             <h6 class="mb-1" style="max-height: 20px; overflow: hidden;">${data.SenderName}</h6>
                             <p class="mb-1 text-muted">${data.Message}</p>
