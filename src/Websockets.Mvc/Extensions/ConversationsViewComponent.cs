@@ -29,6 +29,7 @@ namespace Websockets.Mvc.Extensions
                     chat.Users = [firstUser];
             }
 
+            chats = chats.Where(c => c.Messages.Any()).Reverse();
             return View(chats.Reverse());
         }
     }
