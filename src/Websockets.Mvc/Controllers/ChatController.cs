@@ -48,9 +48,7 @@ namespace Websockets.Mvc.Controllers
         [HttpGet("available-users")]
         public async Task<IActionResult> AvailableUsers()
         {
-            var userId = _userInjection.GetUserId();
             var users = await _userRepository.GetUsers();
-            users = users.Where(u => u.Id != userId);
             return View(users);
         }
     }

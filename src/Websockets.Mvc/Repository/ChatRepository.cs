@@ -8,7 +8,7 @@ namespace Websockets.Mvc.Repository
     {
         Task CreateAsync(Chat chat);
         Task<Chat> GetChatAsync(Guid chat);
-        Task<Chat> GetChatAsync(params Guid[] users);
+        Task<Chat?> GetChatAsync(params Guid[] users);
         Task AddMessageToChatAsync(Guid chat, Message message);
         Task<IEnumerable<Chat>> GetChatsAsync(Guid user);
     }
@@ -33,16 +33,16 @@ namespace Websockets.Mvc.Repository
         }
 
         /* Get chat that contain the users (ids) */
-        public async Task<Chat> GetChatAsync(params Guid[] ids)
+        public async Task<Chat?> GetChatAsync(params Guid[] ids)
         {
-            var filters = ids.Select(id => Builders<Chat>.Filter.ElemMatch(c => c.Users, user => user.Id == id));
+            var distinctIds = ids.Distinct().ToArray();
 
-            var combinedFilter = Builders<Chat>.Filter.And(
-                Builders<Chat>.Filter.Size(c => c.Users, ids.Length),
-                Builders<Chat>.Filter.And(filters)
+            var filter = Builders<Chat>.Filter.And(
+                Builders<Chat>.Filter.Where(c => distinctIds.Length == c.Users.Select(u => u.Id).Distinct().Count()),
+                Builders<Chat>.Filter.Where(c => distinctIds.Except(c.Users.Select(u => u.Id)).Any() == false)
             );
 
-            return await _chatCollection.Find(combinedFilter).Limit(1).FirstOrDefaultAsync();
+            return await _chatCollection.Find(filter).Limit(1).FirstOrDefaultAsync();
         }
 
         public async Task AddMessageToChatAsync(Guid chatId, Message message)
